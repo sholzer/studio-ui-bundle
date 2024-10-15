@@ -15,15 +15,25 @@ import { Avatar } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import React from 'react'
 import { useStlyes } from './left-sidebar-view.styles'
+import { useWidgetManager } from '@Pimcore/modules/widget-manager/hooks/use-widget-manager'
 
 export const LeftSidebarView = (): React.JSX.Element => {
   const { styles } = useStlyes()
+  const { openMainWidget } = useWidgetManager()
 
   return (
     <div className={ styles.leftSidebar }>
       <Avatar
         className='left-sidebar__avatar'
         icon={ <UserOutlined /> }
+        onClick={ () => {
+          openMainWidget({
+            name: 'Users',
+            icon: 'user-01',
+            id: 'user-management',
+            component: 'user-management'
+          })
+        } }
         size={ 26 }
       />
     </div>
