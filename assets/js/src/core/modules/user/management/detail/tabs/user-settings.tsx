@@ -17,9 +17,11 @@ import { Card } from '@Pimcore/components/card/card'
 import { Switch } from '@Pimcore/components/switch/switch'
 import { useTranslation } from 'react-i18next'
 
-const UserSettings = ({ ...props }): React.JSX.Element => {
+const UserSettings = (id): React.JSX.Element => {
   const [form] = Form.useForm()
   const { t } = useTranslation()
+
+  console.log('id', id)
 
   return (
     <div className={ 'scrolling-area' }>

@@ -12,48 +12,40 @@
 */
 
 import React from 'react'
-import { Tabs, type TabsProps } from 'antd'
 import { UserDetailTab } from '@Pimcore/modules/user/management/detail/tabs/user-detail-tab'
-// import { useUser } from '@Pimcore/modules/user/hooks/use-user'
+import { useUserHelper } from '@Pimcore/modules/user/hooks/use-user-helper'
+import { Content } from '@Pimcore/components/content/content'
 
 const ManagementDetail = ({ ...props }): React.JSX.Element => {
-  // should come from state
-  const items: TabsProps['items'] = [
-    {
-      key: '1',
-      label: 'User 1',
-      children: <UserDetailTab
-        id={ 1 }
-        key={ 1 }
-                />
-    },
-    {
-      key: '2',
-      label: 'User 2',
-      children: <UserDetailTab
-        id={ 2 }
-        key={ 2 }
-                />
-    },
-    {
-      key: '3',
-      label: 'User 3',
-      children: <UserDetailTab
-        id={ 3 }
-        key={ 3 }
-                />
-    }
-  ]
+  const { getAllIds, activeId } = useUserHelper()
+  const [activeItem, setActiveItem] = React.useState<number | undefined>()
+
+  // set active item
+  React.useEffect(() => {
+    setActiveItem(activeId)
+  }, [activeId])
 
   return (
     <>
-      <Tabs
-        defaultActiveKey="1"
-        destroyInactiveTabPane
-        items={ items }
-        onChange={ (key) => { console.log('switch to user tab', key) } }
-      >
-      </Tabs>
+      {getAllIds.map((id) => (
+        <button
+          key={ id }
+          onClick={ () => { setActiveItem(id) } }
+          type={ 'button' }
+        >
+          todo title {id}
+
+        </button>
+      ))}
+
+      {activeItem !== undefined
+        ? (
+          <Content padded>
+            <UserDetailTab id={ activeItem } />
+          </Content>
+          )
+        : <Content none></Content>
+      }
     </>
   )
 }

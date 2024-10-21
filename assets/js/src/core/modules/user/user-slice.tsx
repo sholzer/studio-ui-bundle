@@ -20,13 +20,17 @@ export const userAdapter: EntityAdapter<any, any> = createEntityAdapter({})
 export const slice = createSlice({
   name: 'user',
   initialState: userAdapter.getInitialState({
-    test: true
+    activeId: undefined as number | undefined
   }),
   reducers: {
     userReceived: userAdapter.upsertOne,
-    removeUser (state, action: PayloadAction<number>): void {
-      console.log('removeUser', action.payload)
-      // userAdapter.removeOne(state, action.payload)
+    userOpened: (state, action: PayloadAction<number>) => {
+      console.log('TEST', action.payload)
+      // state.openIds.push(action.payload)
+      state.activeId = action.payload
+    },
+    userFetched: (state, action: PayloadAction<any>) => {
+      userAdapter.upsertOne(state, action)
     }
   }
 })
@@ -34,8 +38,9 @@ export const slice = createSlice({
 injectSliceWithState(slice)
 
 export const {
-  removeUser,
-  userReceived
+  userReceived,
+  userOpened,
+  userFetched
 } = slice.actions
 
-export const { selectById: selectUserById } = userAdapter.getSelectors((state: RootState) => state.user)
+export const { selectById } = userAdapter.getSelectors((state: RootState) => state.user)

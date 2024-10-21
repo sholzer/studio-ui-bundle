@@ -18,6 +18,7 @@ import { UserWorkspaces } from '@Pimcore/modules/user/management/detail/tabs/use
 import { UserKeyBindings } from '@Pimcore/modules/user/management/detail/tabs/user-key-bindings'
 import { UserReferences } from '@Pimcore/modules/user/management/detail/tabs/user-references'
 import { useTranslation } from 'react-i18next'
+// import { useUserHelper } from '@Pimcore/modules/user/hooks/use-user-helper'
 
 export interface UserDetailTabProps {
   id: number
@@ -25,12 +26,14 @@ export interface UserDetailTabProps {
 
 const UserDetailTab = (props: UserDetailTabProps): React.JSX.Element => {
   const { t } = useTranslation()
+  // const { fetchUser } = useUserHelper()
+  // const [user, setUser] = React.useState<any>(null)
 
   const items: TabsProps['items'] = [
     {
       key: `${props.id}-settings`,
       label: t('user-management.settings'),
-      children: <UserSettings />
+      children: <UserSettings id={ props.id } />
     },
     {
       key: `${props.id}-workspaces`,
@@ -49,9 +52,16 @@ const UserDetailTab = (props: UserDetailTabProps): React.JSX.Element => {
     }
   ]
 
+  // React.useEffect(() => {
+  //   fetchUser(props.id).then((user) => {
+  //     setUser(user)
+  //   }).catch((error) => {
+  //     console.error(error)
+  //   })
+  // }, [props.id])
+
   return (
     <>
-      userId: { props.id }
       <Tabs
         className={ 'widget__content__detail' }
         defaultActiveKey="1"
