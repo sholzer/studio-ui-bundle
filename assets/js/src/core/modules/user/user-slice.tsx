@@ -43,4 +43,4 @@ export const {
   userFetched
 } = slice.actions
 
-export const { selectById } = userAdapter.getSelectors((state: RootState) => state.user)
+export const { selectById: selectUserById } = userAdapter.getSelectors((state: RootState) => state.user)

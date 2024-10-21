@@ -37,6 +37,7 @@ interface UseUserReturn {
 
 export const useUserHelper = (): UseUserReturn => {
   const dispatch = useAppDispatch()
+
   function openUser (id: number): void {
     dispatch(userOpened(id))
   }

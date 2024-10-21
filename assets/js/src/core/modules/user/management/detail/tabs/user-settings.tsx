@@ -16,12 +16,19 @@ import { Form, Input, Col, Row } from 'antd'
 import { Card } from '@Pimcore/components/card/card'
 import { Switch } from '@Pimcore/components/switch/switch'
 import { useTranslation } from 'react-i18next'
+import { useUser } from '@Pimcore/modules/user/hooks/use-user'
 
-const UserSettings = (id): React.JSX.Element => {
+export interface UserSettingsProps {
+  id: number
+}
+
+const UserSettings = ({ id, ...props }: UserSettingsProps): React.JSX.Element => {
   const [form] = Form.useForm()
   const { t } = useTranslation()
 
-  console.log('id', id)
+  const { user } = useUser(id)
+
+  console.log(user)
 
   return (
     <div className={ 'scrolling-area' }>
@@ -38,6 +45,7 @@ const UserSettings = (id): React.JSX.Element => {
               />
 
               <Form.Item
+                initialValue={ user?.name }
                 label={ t('user-management.username') }
                 name="username"
               >
