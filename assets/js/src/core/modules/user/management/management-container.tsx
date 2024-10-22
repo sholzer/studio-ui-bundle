@@ -15,48 +15,39 @@ import React from 'react'
 import { SplitLayout } from '@Pimcore/components/split-layout/split-layout'
 import { TreeContainer } from '@Pimcore/modules/user/management/tree/tree-container'
 import { ManagementDetail } from '@Pimcore/modules/user/management/detail/management-detail'
-
-// export interface ManagementContainerProps {
-// }
+import { Content } from '@Pimcore/components/content/content'
+import { Toolbar } from '@Pimcore/modules/user/management/toolbar/toolbar'
 
 const ManagementContainer = ({ ...props }): React.JSX.Element => {
-  // const { openAsset } = useAssetHelper()
-
-  // async function onSelect (node: TreeNodeProps): Promise<void> {
-  //     await store.dispatch(api.endpoints.assetGetById.initiate({ id: parseInt(node.id) }))
-  //
-  //     openAsset({
-  //         config: {
-  //             id: parseInt(node.id)
-  //         }
-  //     })
-  // }
-
   const sidebar = {
-    id: 'test-sidebar',
+    id: 'user-tree',
     size: 25,
     minSize: 200,
     children: [
-      <TreeContainer key="test-1" />
+      <TreeContainer key="user-tree" />
     ]
   }
 
   const main = {
-    id: 'test-main',
+    id: 'user-detail',
     size: 75,
     minSize: 600,
     children: [
-      <ManagementDetail key="test-2" />
+      <ManagementDetail key="user-detail" />
     ]
   }
 
   return (
     <>
-      <SplitLayout
-        leftItem={ sidebar }
-        rightItem={ main }
-        withDivider
-      />
+      <Content padded>
+        <SplitLayout
+          leftItem={ sidebar }
+          rightItem={ main }
+          withDivider
+        />
+      </Content>
+
+      <Toolbar />
     </>
   )
 }

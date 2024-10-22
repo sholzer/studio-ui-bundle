@@ -21,7 +21,7 @@ import { useFormModal } from '@Pimcore/components/modal/form-modal/hooks/use-for
 
 const TreeContainer = ({ ...props }): React.JSX.Element => {
   // const { t } = useTranslation()
-  const { fetchUser, getUserTree, addNewUser, addNewFolder, removeUser, cloneUser, removeFolder } = useUserHelper()
+  const { openUser, getUserTree, addNewUser, addNewFolder, removeUser, cloneUser, removeFolder } = useUserHelper()
   const [loading, setLoading] = React.useState<boolean>(true)
 
   // todo should we set this initial state here?
@@ -85,6 +85,7 @@ const TreeContainer = ({ ...props }): React.JSX.Element => {
     return items.map((item: any) => ({
       title: item.name,
       key: item.id,
+      selectable: item.type === 'user',
       icon: item.type === 'user' ? <Icon name={ 'user-01' } /> : <Icon name={ 'folder' } />,
       actions: item.type === 'user'
         ? [
@@ -236,7 +237,7 @@ const TreeContainer = ({ ...props }): React.JSX.Element => {
             }
           }
             onLoadData={ handleOnLoadData }
-            onSelected={ fetchUser }
+            onSelected={ openUser }
             treeData={ treeData }
           />
 

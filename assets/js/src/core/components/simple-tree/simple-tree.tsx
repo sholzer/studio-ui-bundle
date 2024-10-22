@@ -67,8 +67,10 @@ const SimpleTree = ({ treeData, className, defaultExpandedKeys, onCheck, onActio
           actions={ node.actions }
           onActionsClick={ (action) => onActionsClick?.(node.key, action) }
           onSelected={ () => {
-            setSelectedKeys([node.key])
-            onSelected?.(node.key)
+            if (node.selectable !== false) {
+              setSelectedKeys([node.key])
+              onSelected?.(node.key)
+            }
           } }
           title={ node.title as string }
         />

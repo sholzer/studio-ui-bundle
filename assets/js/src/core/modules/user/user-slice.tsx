@@ -23,14 +23,14 @@ export const slice = createSlice({
     activeId: undefined as number | undefined
   }),
   reducers: {
-    userReceived: userAdapter.upsertOne,
-    userOpened: (state, action: PayloadAction<number>) => {
-      console.log('TEST', action.payload)
-      // state.openIds.push(action.payload)
+    userOpened: (state, action: PayloadAction<number>): void => {
       state.activeId = action.payload
     },
-    userFetched: (state, action: PayloadAction<any>) => {
+    userFetched: (state, action: PayloadAction<any>): void => {
       userAdapter.upsertOne(state, action)
+    },
+    removeUser: (state, action: PayloadAction<number | any>): void => {
+      userAdapter.removeOne(state, action.payload)
     }
   }
 })
@@ -38,7 +38,7 @@ export const slice = createSlice({
 injectSliceWithState(slice)
 
 export const {
-  userReceived,
+  removeUser,
   userOpened,
   userFetched
 } = slice.actions

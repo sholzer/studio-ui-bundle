@@ -11,57 +11,85 @@
 *  @license    https://github.com/pimcore/studio-ui-bundle/blob/1.x/LICENSE.md POCL and PCL
 */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Tabs, type TabsProps } from 'antd'
 import { UserSettings } from '@Pimcore/modules/user/management/detail/tabs/user-settings'
 import { UserWorkspaces } from '@Pimcore/modules/user/management/detail/tabs/user-workspaces'
 import { UserKeyBindings } from '@Pimcore/modules/user/management/detail/tabs/user-key-bindings'
 import { UserReferences } from '@Pimcore/modules/user/management/detail/tabs/user-references'
 import { useTranslation } from 'react-i18next'
-// import { useUserHelper } from '@Pimcore/modules/user/hooks/use-user-helper'
+import { UserProvider } from '@Pimcore/modules/user/user-provider'
+import { useIsAcitveMainWidget } from '@Pimcore/modules/widget-manager/hooks/use-is-active-main-widget'
+import { useGlobalUserContext } from '@Pimcore/modules/user/hooks/use-global-user-context'
+import { useUserDraft } from '@Pimcore/modules/user/hooks/use-user-draft'
+import { Content } from '@Pimcore/components/content/content'
 
-export interface UserDetailTabProps {
+interface IUserDetailTabProps {
   id: number
 }
 
-const UserDetailTab = (props: UserDetailTabProps): React.JSX.Element => {
+const UserDetailTab = ({ id, ...props }: IUserDetailTabProps): React.JSX.Element => {
   const { t } = useTranslation()
-  // const { fetchUser } = useUserHelper()
-  // const [user, setUser] = React.useState<any>(null)
+  const isWidgetActive = useIsAcitveMainWidget()
+  const { setContext, removeContext } = useGlobalUserContext()
+  const { user, isLoading, isError, removeUserFromState } = useUserDraft(id)
+
+  useEffect(() => {
+    return () => {
+      removeContext()
+      removeUserFromState()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isWidgetActive) {
+      setContext({ id })
+    }
+
+    return () => {
+      if (!isWidgetActive) {
+        removeContext()
+      }
+    }
+  }, [isWidgetActive])
+
+  if (isError) {
+    return <div>Error</div>
+  }
+
+  if (isLoading) {
+    return <Content loading />
+  }
+
+  if (user === undefined) {
+    return <></>
+  }
 
   const items: TabsProps['items'] = [
     {
-      key: `${props.id}-settings`,
+      key: 'settings',
       label: t('user-management.settings'),
-      children: <UserSettings id={ props.id } />
+      children: <UserSettings />
     },
     {
-      key: `${props.id}-workspaces`,
+      key: 'workspaces',
       label: t('user-management.workspaces'),
       children: <UserWorkspaces />
     },
     {
-      key: `${props.id}-key-bindings`,
+      key: 'key-bindings',
       label: t('user-management.key-bindings'),
       children: <UserKeyBindings />
     },
     {
-      key: `${props.id}-user-references`,
+      key: 'user-references',
       label: t('user-management.user-references'),
       children: <UserReferences />
     }
   ]
 
-  // React.useEffect(() => {
-  //   fetchUser(props.id).then((user) => {
-  //     setUser(user)
-  //   }).catch((error) => {
-  //     console.error(error)
-  //   })
-  // }, [props.id])
-
   return (
-    <>
+    <UserProvider id={ id }>
       <Tabs
         className={ 'widget__content__detail' }
         defaultActiveKey="1"
@@ -69,7 +97,7 @@ const UserDetailTab = (props: UserDetailTabProps): React.JSX.Element => {
         items={ items }
       >
       </Tabs>
-    </>
+    </UserProvider>
   )
 }
 

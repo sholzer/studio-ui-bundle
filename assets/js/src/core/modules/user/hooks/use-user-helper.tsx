@@ -18,20 +18,19 @@ import {
   type UserGetTreeApiResponse,
   type UserDeleteByIdApiResponse,
   type UserCloneByIdApiResponse,
-  type UserFolderCreateApiResponse, type UserFolderDeleteByIdApiResponse, type UserGetByIdApiResponse
+  type UserFolderCreateApiResponse, type UserFolderDeleteByIdApiResponse
 } from '@Pimcore/modules/user/user-api-slice.gen'
-import { userOpened, userFetched } from '@Pimcore/modules/user/user-slice'
+import { userOpened } from '@Pimcore/modules/user/user-slice'
 
 interface UseUserReturn {
   openUser: (id) => void
-  fetchUser: (id) => Promise<UserGetByIdApiResponse>
   getUserTree: (props) => Promise<UserGetTreeApiResponse>
   addNewUser: ({ parentId, name }) => Promise<UserCreateApiResponse>
   removeUser: (props) => Promise<UserDeleteByIdApiResponse>
   removeFolder: (props) => Promise<UserFolderDeleteByIdApiResponse>
   cloneUser: (props) => Promise<UserCloneByIdApiResponse>
   addNewFolder: ({ parentId, name }) => Promise<UserFolderCreateApiResponse>
-  activeId: number | undefined
+  activeId: number
   getAllIds: number[]
 }
 
@@ -40,15 +39,6 @@ export const useUserHelper = (): UseUserReturn => {
 
   function openUser (id: number): void {
     dispatch(userOpened(id))
-  }
-
-  async function fetchUser (id: number): Promise<UserGetByIdApiResponse> {
-    const { data }: any = await dispatch(api.endpoints.userGetById.initiate({ id }))
-    dispatch(userFetched(data))
-
-    openUser(id)
-
-    return data
   }
 
   async function getUserTree (props): Promise<UserGetTreeApiResponse> {
@@ -93,5 +83,5 @@ export const useUserHelper = (): UseUserReturn => {
   const activeId = useAppSelector(state => state.user.activeId)
   const getAllIds = useAppSelector(state => state.user.ids)
 
-  return { openUser, fetchUser, getUserTree, addNewUser, addNewFolder, removeUser, cloneUser, removeFolder, activeId, getAllIds }
+  return { openUser, getUserTree, addNewUser, addNewFolder, removeUser, cloneUser, removeFolder, activeId, getAllIds }
 }

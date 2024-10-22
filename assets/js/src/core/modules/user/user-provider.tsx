@@ -11,17 +11,23 @@
 *  @license    https://github.com/pimcore/studio-ui-bundle/blob/1.x/LICENSE.md POCL and PCL
 */
 
-import { useContext } from 'react'
-import { UserContext } from '../user-provider'
+import React, { createContext, useMemo } from 'react'
 
-export interface UseDataObjectReturn {
+export interface IUserContext {
   id: number
 }
 
-export const useUser = (): UseDataObjectReturn => {
-  const { id } = useContext(UserContext)
+export interface IUserProviderProps {
+  id: number
+  children?: React.ReactNode
+}
 
-  return {
-    id
-  }
+export const UserContext = createContext<IUserContext>({ id: 0 })
+
+export const UserProvider = ({ id, children }: IUserProviderProps): React.JSX.Element => {
+  return useMemo(() => (
+    <UserContext.Provider value={ { id } }>
+      {children}
+    </UserContext.Provider>
+  ), [id])
 }

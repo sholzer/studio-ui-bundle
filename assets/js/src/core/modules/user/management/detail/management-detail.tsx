@@ -18,19 +18,14 @@ import { Content } from '@Pimcore/components/content/content'
 
 const ManagementDetail = ({ ...props }): React.JSX.Element => {
   const { getAllIds, activeId } = useUserHelper()
-  const [activeItem, setActiveItem] = React.useState<number | undefined>()
-
-  // set active item
-  React.useEffect(() => {
-    setActiveItem(activeId)
-  }, [activeId])
+  const { openUser } = useUserHelper()
 
   return (
     <>
-      {getAllIds.map((id) => (
+      {getAllIds?.map((id) => (
         <button
           key={ id }
-          onClick={ () => { setActiveItem(id) } }
+          onClick={ () => { openUser(id) } }
           type={ 'button' }
         >
           todo title {id}
@@ -38,14 +33,13 @@ const ManagementDetail = ({ ...props }): React.JSX.Element => {
         </button>
       ))}
 
-      {activeItem !== undefined
+      {activeId !== undefined
         ? (
-          <Content padded>
-            <UserDetailTab id={ activeItem } />
-          </Content>
+          <UserDetailTab id={ activeId } />
           )
-        : <Content none></Content>
-      }
+        : (
+          <Content none></Content>
+          )}
     </>
   )
 }
